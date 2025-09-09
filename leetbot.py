@@ -5,7 +5,7 @@ import requests
 import json
 import os
 
-token = ""
+token = "MTQxMzU0NzkxMDIyNTk4NTU3Ng.Gi8-tq.h-ZbxoyltHspwTxWoe7ySExhl8nPiuKebCIpgw"
 
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -21,13 +21,14 @@ def load_skip_data():
     return {}
 
 def save_skip_data(data):
-    with open(SKIP_FILE, "w") as f:
+    with open(SKIP_FILE, "w") as f: 
         json.dump(data, f)
 
 def get_problem(tag, difficulty):
     skip_data = load_skip_data()
     if tag not in skip_data:
         skip_data[tag] = {d: 0 for d in VALID_DIFFICULTIES}
+        save_skip_data(skip_data)
     skip_count = skip_data[tag][difficulty]
     url = f"https://alfa-leetcode-api.onrender.com/problems?tags={tag}&difficulty={difficulty}&limit=1&skip={skip_count}"
     res = requests.get(url, timeout=10)
@@ -54,7 +55,7 @@ async def topic_autocomplete(interaction: discord.Interaction, current: str):
 async def difficulty_autocomplete(interaction: discord.Interaction, current: str):
     return [app_commands.Choice(name=diff, value=diff) for diff in VALID_DIFFICULTIES if current.lower() in diff.lower()]
 
-@bot.tree.command(name="daily", description="hehe have fun")
+@bot.tree.command(name="leet", description="hehe have fun")
 @app_commands.describe(topic="choose topic", difficulty="choose difficulty")
 @app_commands.autocomplete(topic=topic_autocomplete, difficulty=difficulty_autocomplete)
 async def daily(interaction: discord.Interaction, topic: str, difficulty: str):
